@@ -1,4 +1,4 @@
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
 
 import com.opensymphony.xwork2.ActionContext;
@@ -7,14 +7,17 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 
 // TODO Vary headers tests
+// TODO  integration test where we set up a few interceptors and check that the chain gets interrupted when an attack reaches our interceptor
 
-public class CSRFPreventionInterceptorTest extends XWorkTestCase {
+public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
-    CSRFPreventionInterceptor interceptor;
+    private final FetchMetadataInterceptor interceptor = new FetchMetadataInterceptor(new HashSet<>(Arrays.asList("/foo", "/bar")));
 
 
     public void testNoSite() throws Exception {
@@ -27,12 +30,7 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        try{
-            interceptor.intercept(mai);
-            assert(true);
-        } catch (RuntimeException e){
-            assert(false);
-        }
+        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
     }
 
     public void testValidSite() throws Exception {
@@ -40,18 +38,13 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         for (String header : Arrays.asList("same-origin", "same-site", "none")){
-            request.addHeader("sec-fetch-site", "same-origin");
+            request.addHeader("sec-fetch-site", header);
 
             ServletActionContext.setRequest(request);
             ActionContext context = ServletActionContext.getActionContext();
             mai.setInvocationContext(context);
 
-            try{
-                interceptor.intercept(mai);
-                assert(true);
-            } catch (RuntimeException e){
-                assert(false);
-            }
+            assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
             request.removeHeader("sec-fetch-site");
         }
 
@@ -69,12 +62,7 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        try{
-            interceptor.intercept(mai);
-            assert(true);
-        } catch (RuntimeException e){
-            assert(false);
-        }
+        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
     }
 
     public void testInValidTopLevelNavigation() throws Exception {
@@ -91,12 +79,8 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
             ActionContext context = ServletActionContext.getActionContext();
             mai.setInvocationContext(context);
 
-            try{
-                interceptor.intercept(mai);
-                assert(false);
-            } catch (RuntimeException e){
-                assert(true);
-            }
+
+            assertEquals("Expected interceptor to NOT accept this request", "403", interceptor.intercept(mai));
             request.removeHeader("sec-fetch-dest");
         }
     }
@@ -106,19 +90,13 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         request.addHeader("sec-fetch-site", "foo");
-        request.setContextPath("/foobar");
-        interceptor.setExemptedPaths(Arrays.asList("/foobar", "/test"));
+        request.setContextPath("/foo");
 
         ServletActionContext.setRequest(request);
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        try{
-            interceptor.intercept(mai);
-            assert(true);
-        } catch (RuntimeException e){
-            assert(false);
-        }
+        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
     }
 
     public void testPathNotInExemptedPaths() throws Exception {
@@ -127,25 +105,18 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
 
         request.addHeader("sec-fetch-site", "foo");
         request.setContextPath("/foobar");
-        interceptor.setExemptedPaths(Arrays.asList("/test"));
 
         ServletActionContext.setRequest(request);
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        try{
-            interceptor.intercept(mai);
-            assert(false);
-        } catch (RuntimeException e){
-            assert(true);
-        }
+        assertEquals("Expected interceptor to NOT accept this request", "403", interceptor.intercept(mai));
     }
 
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        interceptor = new CSRFPreventionInterceptor();
         container.inject(interceptor);
     }
 

@@ -1,39 +1,33 @@
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ *
+ * Default resource isolation policy used in {@link FetchMetadataInterceptor} that
+ * implements the {@link ResourceIsolationPolicy} interface. This default policy is based on
+ * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>.
+ *
+ * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
+ *
+ * @author Santiago Diaz - saldiaz@google.com
+ * @author Giannis Chatziveroglou - giannic@google.com
+ **/
 
 public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
-
-    private List<String> exemptedPaths = new ArrayList<String>();
-
-    public List<String> getExemptedPaths(){
-        return this.exemptedPaths;
-    }
-
-    public void setExemptedPaths(List<String> paths){
-        this.exemptedPaths = paths;
-    }
 
     @Override
     public boolean isRequestAllowed(HttpServletRequest request) {
 
         String site = request.getHeader(SEC_FETCH_SITE_HEADER);
 
-        // Allow same-site and browser-initiated requests
-        if (SAME_ORIGIN.equals(site) || SAME_SITE.equals(site) || NONE.equals(site)) {
-            return true;
-        }
-
-        // Apply exemptions: paths/endpoints meant to be served cross-origin
-        if (this.exemptedPaths.contains(request.getContextPath())) {
-            return true;
-        }
-
         // Allow requests from browsers which don't send Fetch Metadata
         if (request.getHeader(SEC_FETCH_SITE_HEADER) == null){
+            return true;
+        }
+
+        // Allow same-site and browser-initiated requests
+        if (SAME_ORIGIN.equals(site) || SAME_SITE.equals(site) || NONE.equals(site)) {
             return true;
         }
 
@@ -51,5 +45,4 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
 
         return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;
     }
-
 }
