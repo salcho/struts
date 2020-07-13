@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.TextParseUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import java.util.Set;
  *              cross-site traffic</li>
  *     <li>resourceIsolationPolicy -Instance of {@link DefaultResourceIsolationPolicy} implementing
  *              the logic for the requests filtering</li>
+ *      <li>VARY_HEADER_VALUE - static vary header value for each vary response headers</li>
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
@@ -44,7 +46,7 @@ import java.util.Set;
  * &lt;action ... &gt;
  *   &lt;interceptor-ref name="defaultStack"/&gt;
  *   &lt;interceptor-ref name="fetchMetadata"&gt;
- *      &lt;parameter TODO add parameter for exempted paths /&gt;
+ *      &lt;param name="exemptedPaths"&gt; path1,path2,path3 &lt;para/&gt;
  *   &lt;interceptor-ref/&gt;
  *   ...
  * &lt;/action&gt;
@@ -56,17 +58,17 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
 
     private final Set<String> exemptedPaths = new HashSet<String>();
     private final ResourceIsolationPolicy resourceIsolationPolicy = new DefaultResourceIsolationPolicy();
+    static final String VARY_HEADER_VALUE = String.format("%s,%s,%s", DefaultResourceIsolationPolicy.SEC_FETCH_DEST_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_SITE_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_MODE_HEADER);
 
-    public FetchMetadataInterceptor(Set<String> exemptedPaths){
-        this.exemptedPaths.addAll(exemptedPaths);
+    public void setExemptedPaths(String paths){
+        this.exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
     }
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         // Add Vary headers
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-        response.setHeader(resourceIsolationPolicy.VARY_HEADER, resourceIsolationPolicy.SEC_FETCH_DEST_HEADER + ", "
-                + resourceIsolationPolicy.SEC_FETCH_SITE_HEADER + ", " + resourceIsolationPolicy.SEC_FETCH_MODE_HEADER);
+        response.setHeader(DefaultResourceIsolationPolicy.VARY_HEADER, VARY_HEADER_VALUE);
     }
 
     @Override
@@ -74,13 +76,14 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
         ActionContext context = invocation.getInvocationContext();
         HttpServletRequest request = context.getServletRequest();
 
-        // Apply exemptions: paths/endpoints meant to be served cross-origin
-        if (!(resourceIsolationPolicy.isRequestAllowed(request) || this.exemptedPaths.contains(request.getContextPath()))) {
-            return String.valueOf(HttpServletResponse.SC_FORBIDDEN);
-        }
-
         // Adds listener that operates between interceptor and result rendering to set Vary headers
         invocation.addPreResultListener(this);
+
+        // Apply exemptions: paths/endpoints meant to be served cross-origin
+        if (!resourceIsolationPolicy.isRequestAllowed(request) && !this.exemptedPaths.contains(request.getContextPath())) {
+            this.beforeResult(invocation, String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+            return String.valueOf(HttpServletResponse.SC_FORBIDDEN);
+        }
 
         return invocation.invoke();
     }

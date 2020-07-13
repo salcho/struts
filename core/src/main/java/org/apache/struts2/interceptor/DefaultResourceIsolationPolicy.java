@@ -1,5 +1,7 @@
 package org.apache.struts2.interceptor;
 
+import org.apache.logging.log4j.util.Strings;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -18,11 +20,10 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
 
     @Override
     public boolean isRequestAllowed(HttpServletRequest request) {
-
         String site = request.getHeader(SEC_FETCH_SITE_HEADER);
 
         // Allow requests from browsers which don't send Fetch Metadata
-        if (request.getHeader(SEC_FETCH_SITE_HEADER) == null){
+        if (Strings.isEmpty((site))){
             return true;
         }
 
