@@ -1,6 +1,12 @@
 package org.apache.struts2.interceptor;
 
 
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.VARY_HEADER;
+import static org.junit.Assert.assertNotEquals;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -16,19 +22,37 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
     private final MockActionInvocation mai = new MockActionInvocation();
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
-    private static final String VARY_HEADER_VALUE = String.format("%s,%s,%s", DefaultResourceIsolationPolicy.SEC_FETCH_DEST_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_SITE_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_MODE_HEADER);
+    private static final String VARY_HEADER_VALUE = String.format(
+        "%s,%s,%s",
+        SEC_FETCH_DEST_HEADER,
+        SEC_FETCH_SITE_HEADER,
+        SEC_FETCH_MODE_HEADER
+    );
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        container.inject(interceptor);
+        interceptor.setExemptedPaths("/foo,/bar");
+        ServletActionContext.setRequest(request);
+        ServletActionContext.setResponse(response);
+        ActionContext context = ServletActionContext.getActionContext();
+        mai.setInvocationContext(context);
+    }
 
     public void testNoSite() throws Exception {
         request.removeHeader("sec-fetch-site");
 
-        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
+        assertNotEquals("Expected interceptor to accept this request", "403",
+            interceptor.intercept(mai));
     }
 
     public void testValidSite() throws Exception {
         for (String header : Arrays.asList("same-origin", "same-site", "none")){
             request.addHeader("sec-fetch-site", header);
 
-            assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
+            assertNotEquals("Expected interceptor to accept this request", "403",
+                interceptor.intercept(mai));
         }
 
     }
@@ -38,10 +62,11 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         request.addHeader("sec-fetch-dest", "script");
         request.setMethod("GET");
 
-        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
+        assertNotEquals("Expected interceptor to accept this request", "403",
+            interceptor.intercept(mai));
     }
 
-    public void testInValidTopLevelNavigation() throws Exception {
+    public void testInvalidTopLevelNavigation() throws Exception {
         for (String header : Arrays.asList("object", "embed")) {
             request.addHeader("sec-fetch-site", "foo");
             request.addHeader("sec-fetch-mode", "navigate");
@@ -56,7 +81,8 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         request.addHeader("sec-fetch-site", "foo");
         request.setContextPath("/foo");
 
-        assertFalse("Expected interceptor to accept this request", "403".equals(interceptor.intercept(mai)));
+        assertNotEquals("Expected interceptor to accept this request", "403",
+            interceptor.intercept(mai));
     }
 
     public void testPathNotInExemptedPaths() throws Exception {
@@ -72,8 +98,8 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
         interceptor.intercept(mai);
 
-        assertTrue("Expected vary header to be included", response.containsHeader(ResourceIsolationPolicy.VARY_HEADER));
-        assertEquals("Expected different vary header value", response.getHeader(ResourceIsolationPolicy.VARY_HEADER), VARY_HEADER_VALUE);
+        assertTrue("Expected vary header to be included", response.containsHeader(VARY_HEADER));
+        assertEquals("Expected different vary header value", response.getHeader(VARY_HEADER), VARY_HEADER_VALUE);
     }
 
     public void testVaryHeaderRejectedReq() throws Exception {
@@ -81,19 +107,7 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
         interceptor.intercept(mai);
 
-        assertTrue("Expected vary header to be included", response.containsHeader(ResourceIsolationPolicy.VARY_HEADER));
-        assertEquals("Expected different vary header value", response.getHeader(ResourceIsolationPolicy.VARY_HEADER), VARY_HEADER_VALUE);
+        assertTrue("Expected vary header to be included", response.containsHeader(VARY_HEADER));
+        assertEquals("Expected different vary header value", response.getHeader(VARY_HEADER), VARY_HEADER_VALUE);
     }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        container.inject(interceptor);
-        interceptor.setExemptedPaths("/foo,/bar");
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
-        ActionContext context = ServletActionContext.getActionContext();
-        mai.setInvocationContext(context);
-    }
-
 }
