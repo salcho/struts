@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Giannis Chatziveroglou - giannic@google.com
  **/
 
-public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
+public final class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
 
     @Override
     public boolean isRequestAllowed(HttpServletRequest request) {

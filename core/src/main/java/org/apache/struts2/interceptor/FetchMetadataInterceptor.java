@@ -58,7 +58,8 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
 
     private final Set<String> exemptedPaths = new HashSet<String>();
     private final ResourceIsolationPolicy resourceIsolationPolicy = new DefaultResourceIsolationPolicy();
-    static final String VARY_HEADER_VALUE = String.format("%s,%s,%s", DefaultResourceIsolationPolicy.SEC_FETCH_DEST_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_SITE_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_MODE_HEADER);
+    private static final String VARY_HEADER_VALUE = String.format("%s,%s,%s", DefaultResourceIsolationPolicy.SEC_FETCH_DEST_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_SITE_HEADER, DefaultResourceIsolationPolicy.SEC_FETCH_MODE_HEADER);
+    private static final String SC_FORBIDDEN = String.valueOf(HttpServletResponse.SC_FORBIDDEN);
 
     public void setExemptedPaths(String paths){
         this.exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
@@ -80,11 +81,16 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
         invocation.addPreResultListener(this);
 
         // Apply exemptions: paths/endpoints meant to be served cross-origin
-        if (!resourceIsolationPolicy.isRequestAllowed(request) && !this.exemptedPaths.contains(request.getContextPath())) {
-            this.beforeResult(invocation, String.valueOf(HttpServletResponse.SC_FORBIDDEN));
-            return String.valueOf(HttpServletResponse.SC_FORBIDDEN);
+        if (exemptedPaths.contains(request.getContextPath())) {
+            return invocation.invoke();
         }
 
-        return invocation.invoke();
+        // Check if request is allowed
+        if (resourceIsolationPolicy.isRequestAllowed(request)) {
+            return invocation.invoke();
+        }
+
+        beforeResult(invocation, SC_FORBIDDEN);
+        return SC_FORBIDDEN;
     }
 }
