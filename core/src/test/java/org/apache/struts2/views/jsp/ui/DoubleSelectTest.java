@@ -87,7 +87,9 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-        
+
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 
