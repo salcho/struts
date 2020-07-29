@@ -70,7 +70,7 @@
     </#if>
         />
 </#if>
-<script type="text/javascript">
+<#include "/${parameters.templateDir}/simple/script.ftl" />
     <#assign itemCount = startCount/>
     var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});
     for (var i = 0; i < (${parameters.listSize} + ${startCount}); i++) {
@@ -190,4 +190,4 @@
             ${parameters.id}Temp.options[0].selected = true;
         }
     }
-</script>
+<#include "/${parameters.templateDir}/simple/script-close.ftl" />

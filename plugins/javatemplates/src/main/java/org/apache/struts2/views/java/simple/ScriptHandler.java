@@ -39,7 +39,6 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
             .addIfExists("defer", params.get("defer"))
             .addIfExists("src", params.get("src"))
             .addIfExists("type", params.get("type"))
-            .addIfExists("name", params.get("name"))
             .addIfExists("referrerpolicy", params.get("referrerpolicy"))
             .addIfExists("nomodule", params.get("nomodule"))
             .addIfExists("integrity", params.get("integrity"))

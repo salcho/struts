@@ -18,9 +18,9 @@
  * under the License.
  */
 -->
+<script <#rt/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<script <#rt/>
 <#if parameters.nonce?has_content>
  nonce="${parameters.nonce}"<#rt/>
 </#if>
@@ -42,9 +42,6 @@
 </#if>
 <#if parameters.type?has_content>
  type="${parameters.type}"<#rt/>
-</#if>
-<#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
 </#if>
 <#if parameters.referrerpolicy?has_content>
  referrerpolicy="${parameters.referrerpolicy}"<#rt/>

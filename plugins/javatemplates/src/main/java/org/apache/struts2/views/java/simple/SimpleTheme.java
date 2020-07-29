@@ -37,7 +37,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("datetextfield", new FactoryList(DateTextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
                 put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
-                put("form-close", new FactoryList(FormHandler.CloseHandler.class));
+                put("form-close", new FactoryList(FormHandler.CloseHandler.class, ScriptHandler.class));
                 put("a", new FactoryList(AnchorHandler.class));
                 put("a-close", new FactoryList(AnchorHandler.CloseHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("checkbox", new FactoryList(CheckboxHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
@@ -60,6 +60,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("hidden", new FactoryList(HiddenHandler.class));
                 put("fielderror", new FactoryList(FieldErrorHandler.class));
                 put("empty", new FactoryList(EmptyHandler.class));
+                put("doubleselect", new FactoryList(ScriptHandler.class));
            }
         });
         setName("simple");

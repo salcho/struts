@@ -881,6 +881,12 @@ public abstract class UIBean extends Component {
             }
         }
 
+        // to be used with the CSP interceptor - adds the nonce value as a parameter to be accessed from ftl files
+        if (stack.getActionContext().getSession().containsKey("nonce")) {
+            String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
+            addParameter("nonce", nonceValue);
+        }
+
         evaluateExtraParams();
     }
 

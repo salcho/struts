@@ -209,6 +209,8 @@ public class Form extends ClosingUIBean {
         if (focusElement != null) {
             addParameter("focusElement", findString(focusElement));
         }
+
+        addParameter("type", "text/javascript");
     }
 
     /**

@@ -22,12 +22,12 @@
 <#include "/${parameters.templateDir}/simple/form-close.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
 <#if parameters.focusElement??>
-<script type="text/javascript">
+<#include "/${parameters.templateDir}/simple/script.ftl" />
     StrutsUtils.addOnLoad(function() {
         var element = document.getElementById("${parameters.focusElement}");
         if(element) {
             element.focus();
         }
     });
-</script>
+<#include "/${parameters.templateDir}/simple/script-close.ftl" />
 </#if>
