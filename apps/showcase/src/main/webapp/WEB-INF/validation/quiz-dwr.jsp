@@ -62,7 +62,7 @@
             validator.doPost('/validation', 'quizDwr', postData, dwrValidateReply);
             return false;
         }
-	</script>
+	</s:script>
 </head>
 
 <body>
