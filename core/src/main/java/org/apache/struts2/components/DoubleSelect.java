@@ -63,6 +63,5 @@ public class DoubleSelect extends DoubleListUIBean {
         }
         // force the onchange parameter
         addParameter("onchange", onchangeParam.toString());
-//        addParameter("type", "text/javascript");
     }
 }
