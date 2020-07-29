@@ -21,9 +21,7 @@
 <script <#rt/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<#if parameters.nonce?has_content>
- nonce="${parameters.nonce}"<#rt/>
-</#if>
+<#include "/${parameters.templateDir}/simple/nonce.ftl" />
 <#if parameters.async?has_content>
  <#if parameters.async=="true">
   async<#rt/>
