@@ -38,7 +38,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form-close", new FactoryList(FormHandler.CloseHandler.class, ScriptHandler.class, NonceHandler.class));
-                put("a", new FactoryList(AnchorHandler.class, NonceHandler.class));
+                put("a", new FactoryList(AnchorHandler.class));
                 put("a-close", new FactoryList(AnchorHandler.CloseHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("checkbox", new FactoryList(CheckboxHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("file", new FactoryList(FileHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
