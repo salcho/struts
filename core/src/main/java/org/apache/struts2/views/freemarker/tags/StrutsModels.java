@@ -75,6 +75,7 @@ public class StrutsModels {
     protected ElseIfModel elseIfModel;
     protected InputTransferSelectModel inputtransferselect;
     protected ScriptModel script;
+    protected LinkModel link;
 
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -160,6 +161,14 @@ public class StrutsModels {
         }
 
         return label;
+    }
+
+    public LinkModel getLink() {
+        if (link == null) {
+            link = new LinkModel(stack, req, res);
+        }
+
+        return link;
     }
 
     public PasswordModel getPassword() {
