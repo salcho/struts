@@ -18,38 +18,70 @@
  */
 package org.apache.struts2.interceptor.coep;
 
-import static java.lang.String.format;
+
+import com.opensymphony.xwork2.util.TextParseUtil;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.function.Supplier;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CoepConfiguration {
 
-    private String requireCorpHeader = "require-corp";
-    private String coepEnforcingHeader = "Cross-Origin-Embedder-Policy";
-    private String coepReportHeader = "Cross-Origin-Embedder-Policy-Report-Only";
+    private final String REQUIRE_COEP_HEADER = "require-corp";
+    private final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
+    private final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
+    private final String REPORT_TO_HEADER = "Report-to";
 
-    private String reportUri = "/csp-reports";
+    private String reportUri = "/coep-reports"; // TODO find default coep uri
     private boolean enforcingMode = true;
-    private String header = coepEnforcingHeader;
+    private boolean disabled = false;
+    private String header = COEP_ENFORCING_HEADER;
 
-    public void addHeader(HttpServletResponse res){
-        String headerContent = String.format("%s; report-to: %s",
-                requireCorpHeader,
+    public void addHeader(Map<String, Object> session, HttpServletResponse res){
+        if (disabled ){ return; }
+
+        String headerContent = String.format("%s; report-to='%s'",
+                REQUIRE_COEP_HEADER,
                 reportUri);
         res.addHeader(header, headerContent);
+
+        if (session.containsKey(REPORT_TO_HEADER)){
+            throw new IllegalArgumentException("Session already contains a report-to header");
+            // TODO change the exception
+        } else {
+            Map<String, String> params = new HashMap<>();
+            params.put("group", reportUri);
+            params.put("max_age", "86400");
+            params.put("endpoints", String.format("[{url: '%s'}]", reportUri));
+            res.addHeader(REPORT_TO_HEADER, params.toString());
+        }
+    }
+
+//    Report-To: { group: 'coep_rollout_1', max_age: 86400,
+//   endpoints: [{ url: 'https://first-party-test.glitch.me/report'}]}
+//    Cross-Origin-Embedder-Policy: require-corp; report-to="coep_rollout_1"
+
+    private String getFullReportUri(){
+        // TODO change to full path
+        return "dummy";
     }
 
     public void setEnforcingMode(boolean mode){
         this.enforcingMode = mode;
         if (enforcingMode){
-            header = coepEnforcingHeader;
+            header = COEP_ENFORCING_HEADER;
         } else {
-            header = coepReportHeader;
+            header = COEP_REPORT_HEADER;
         }
     }
 
-    public void setReportUri(String reportUri){
-        this.reportUri = reportUri;
+    public void setReportUri(String value){
+        reportUri = value;
+    }
+
+    public void setDisabled(Boolean value){
+        disabled = value;
     }
 }

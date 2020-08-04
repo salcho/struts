@@ -21,12 +21,17 @@ package org.apache.struts2.interceptor.coep;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 
 public class CoepInterceptor extends AbstractInterceptor implements PreResultListener {
@@ -34,6 +39,7 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     private static final Logger LOG = LoggerFactory.getLogger(CoepInterceptor.class);
 
     private CoepConfiguration config = new CoepConfiguration();
+    private Set<String> exemptedPaths = new HashSet<>();
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -43,8 +49,18 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
+        HttpServletRequest req = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse res = invocation.getInvocationContext().getServletResponse();
-        config.addHeader(res);
+        final String path = req.getContextPath();
+
+        if (!exemptedPaths.contains(path)){
+            Map<String, Object> ses = invocation.getInvocationContext().getSession();
+            config.addHeader(ses, res);
+        }
+    }
+
+    public void setExemptedPaths(String paths){
+        this.exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
     }
 
     public void setReportUri(String reportUri) {
@@ -72,5 +88,10 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     public void setEnforcingMode(String value){
         boolean enforcingMode = Boolean.parseBoolean(value);
         config.setEnforcingMode(enforcingMode);
+    }
+
+    public void setDisabled(String value){
+        boolean disabled = Boolean.parseBoolean(value);
+        config.setDisabled(disabled);
     }
 }
