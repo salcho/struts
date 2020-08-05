@@ -245,7 +245,7 @@
             <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
             <interceptor name="clearSession" class="org.apache.struts2.interceptor.ClearSessionInterceptor" />
-            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.coop.CoopInterceptor"/>
+            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.CoopInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
@@ -373,10 +373,13 @@
                  associated with requests that should not be validated.
                  -->
             <interceptor-stack name="defaultStack">
+                <interceptor-ref name="coopInterceptor">
+                    <param name="exemptedPaths"></param>
+                    <param name="mode"></param>
+                </interceptor-ref>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
-                <interceptor-ref name="coopInterceptor"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>

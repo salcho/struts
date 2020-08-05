@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.interceptor.coop.CoopInterceptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -44,7 +43,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
         interceptor.intercept(mai);
 
         String header = response.getHeader(COOP_HEADER);
-        assertFalse("Coop header does not existin non-exempted path", Strings.isEmpty(header));
+        assertFalse("Coop header does not existing non-exempted path", Strings.isEmpty(header));
         assertEquals("Coop header is not same-origin", SAME_ORIGIN, header);
     }
 
@@ -57,7 +56,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testChangeDefaultMode() throws Exception {
-        interceptor.setDefaultMode("unsafe-none");
+        interceptor.setMode("unsafe-none");
         request.setContextPath("/some");
         interceptor.intercept(mai);
 
@@ -70,7 +69,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
         request.setContextPath("/some");
 
         try{
-            interceptor.setDefaultMode("foobar");
+            interceptor.setMode("foobar");
             fail("Exception should be thrown for unrecognized mode");
         } catch (IllegalArgumentException e){
             assert(true);
