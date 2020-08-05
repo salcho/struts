@@ -241,6 +241,7 @@
             <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
             <interceptor name="autowiring" class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="coepInterceptor" class="org.apache.struts2.interceptor.coep.CoepInterceptor"/>
             <interceptor name="conversionError" class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
             <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
@@ -373,6 +374,10 @@
                  associated with requests that should not be validated.
                  -->
             <interceptor-stack name="defaultStack">
+                <interceptor-ref name="coepInterceptor">
+                    <param name="enforcingMode">true</param>
+                    <param name="reportUri">/some-uri</param>
+                    <param name="disabled">false</param>
                 <interceptor-ref name="coopInterceptor">
                     <param name="exemptedPaths"></param>
                     <param name="mode"></param>
