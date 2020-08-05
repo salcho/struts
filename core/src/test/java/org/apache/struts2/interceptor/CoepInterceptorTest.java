@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -22,7 +40,7 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     private final String defaultReportUri = "/coep-reports";
     private final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
     private final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
-    private final String HEADER_CONTENT = String.format("require-corp; report-to='%s'", defaultReportUri);
+    private final String HEADER_CONTENT = String.format("require-corp");
 
 
     public void testDisabled() throws Exception {
@@ -63,38 +81,38 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
         assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
         assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
     }
-
-    public void testRelativePathWithContextPath() throws Exception {
-        interceptor.setEnforcingMode("false");
-        request.setContextPath("/bar");
-        String content = String.format("require-corp; report-to='/bar%s'", defaultReportUri);
-
-        interceptor.intercept(mai);
-
-        String header = response.getHeader(COEP_REPORT_HEADER);
-        assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
-        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
-    }
-
-    public void testCannotParseUri() throws Exception {
-        interceptor.setEnforcingMode("false");
-        try{
-            interceptor.setReportUri("ww w. google.@com");
-            assert(false);
-        } catch (IllegalArgumentException e){
-            assert(true);
-        }
-    }
-
-    public void testCannotParseRelativeUri() throws Exception {
-        interceptor.setEnforcingMode("false");
-        try{
-            interceptor.setReportUri("some-uri");
-            assert(false);
-        } catch (IllegalArgumentException e){
-            assert(true);
-        }
-    }
+//
+//    public void testRelativePathWithContextPath() throws Exception {
+//        interceptor.setEnforcingMode("false");
+//        request.setContextPath("/bar");
+//        String content = String.format("require-corp; report-to='/bar%s'", defaultReportUri);
+//
+//        interceptor.intercept(mai);
+//
+//        String header = response.getHeader(COEP_REPORT_HEADER);
+//        assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
+//        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
+//    }
+//
+//    public void testCannotParseUri() throws Exception {
+//        interceptor.setEnforcingMode("false");
+//        try{
+//            interceptor.setReportUri("ww w. google.@com");
+//            assert(false);
+//        } catch (IllegalArgumentException e){
+//            assert(true);
+//        }
+//    }
+//
+//    public void testCannotParseRelativeUri() throws Exception {
+//        interceptor.setEnforcingMode("false");
+//        try{
+//            interceptor.setReportUri("some-uri");
+//            assert(false);
+//        } catch (IllegalArgumentException e){
+//            assert(true);
+//        }
+//    }
 
     @Override
     protected void setUp() throws Exception {

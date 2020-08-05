@@ -34,7 +34,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
 
     private static final Logger LOG = LoggerFactory.getLogger(CoopInterceptor.class);
     private static final String SAME_ORIGIN = "same-origin";
-    private static final String SAME_SITE = "same-site";
+    private static final String SAME_ORIGIN_ALLOW_POPUPS = "same-origin-allow-popups";
     private static final String UNSAFE_NONE = "unsafe-none";
     private static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
@@ -57,7 +57,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
             // no need to add headers
             LOG.debug(String.format("Skipping COOP header for exempted path %s", path));
         } else {
-            response.addHeader(COOP_HEADER, getMode());
+            response.setHeader(COOP_HEADER, getMode());
         }
     }
 
@@ -72,7 +72,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
     private String getMode(){ return mode; }
 
     public void setMode(String mode) {
-        if (!(mode.equals(SAME_ORIGIN) || mode.equals(SAME_SITE) || mode.equals(UNSAFE_NONE))){
+        if (!(mode.equals(SAME_ORIGIN) || mode.equals(SAME_ORIGIN_ALLOW_POPUPS) || mode.equals(UNSAFE_NONE))){
             throw new IllegalArgumentException(String.format("Mode '%s' not recognized!", mode));
         }
         this.mode = mode;

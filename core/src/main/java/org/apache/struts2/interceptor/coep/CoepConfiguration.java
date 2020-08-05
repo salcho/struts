@@ -39,34 +39,25 @@ public class CoepConfiguration {
     public void addHeader(Map<String, Object> session, HttpServletResponse res){
         if (disabled ){ return; }
 
-        String headerContent = String.format("%s; report-to='%s'",
-                REQUIRE_COEP_HEADER,
-                reportUri);
-        res.addHeader(header, headerContent);
-
-        if (session.containsKey(REPORT_TO_HEADER)){
-            throw new IllegalArgumentException("Session already contains a report-to header");
-            // TODO change the exception
-        } else {
-            Map<String, String> params = new HashMap<>();
-            params.put("group", reportUri);
-            params.put("max_age", "86400");
-            params.put("endpoints", String.format("[{url: '%s'}]", getFullReportUri()));
-            res.addHeader(REPORT_TO_HEADER, params.toString());
-        }
+        String headerContent = String.format("%s",
+                REQUIRE_COEP_HEADER);
+        res.setHeader(header, headerContent);
     }
 
     // TODO need better coding practice than that
-    private String getFullReportUri(){
-        int len = path.length();
-        if (reportUri.substring(len).equals(path)){
-            return reportUri;
-        } else if (reportUri.charAt(0) == '/') {
-            return reportUri = path+reportUri;
-        } else {
-            return reportUri;
-        }
-    }
+//    private String getFullReportUri(){
+//        int len = path.length();
+//        if (reportUri.length() >= len) {
+//            if (reportUri.substring(len).equals(path)) {
+//                return reportUri;
+//            }
+//        }
+//        if (reportUri.charAt(0) == '/') {
+//            return reportUri = path+reportUri;
+//        } else {
+//            return reportUri;
+//        }
+//    }
 
     public void setPath(String value){
         path = value;
