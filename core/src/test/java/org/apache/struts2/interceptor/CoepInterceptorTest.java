@@ -35,7 +35,6 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testEnforcingHeader() throws Exception {
-        request.setContextPath("/foo");
         interceptor.setEnforcingMode("true");
 
         interceptor.intercept(mai);
@@ -46,7 +45,7 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testExemptedPath() throws Exception{
-        interceptor.setExemptedPaths("/foo");
+        request.setContextPath("/foo");
         interceptor.setEnforcingMode("true");
 
         interceptor.intercept(mai);
@@ -65,10 +64,10 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
         assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
     }
 
-    public void testRelativePathWithContext() throws Exception {
-        request.setContextPath("/foo");
+    public void testRelativePathWithContextPath() throws Exception {
         interceptor.setEnforcingMode("false");
-        String content = String.format("require-corp; report-to='/foo%s'", defaultReportUri);
+        request.setContextPath("/bar");
+        String content = String.format("require-corp; report-to='/bar%s'", defaultReportUri);
 
         interceptor.intercept(mai);
 
@@ -101,7 +100,7 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         container.inject(interceptor);
-//        interceptor.setExemptedPaths("/foo,/bar");
+        interceptor.setExemptedPaths("/foo");
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
         ActionContext context = ServletActionContext.getActionContext();
