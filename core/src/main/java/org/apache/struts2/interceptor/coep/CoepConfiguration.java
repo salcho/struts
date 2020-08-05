@@ -19,13 +19,9 @@
 package org.apache.struts2.interceptor.coep;
 
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class CoepConfiguration {
 
@@ -38,6 +34,7 @@ public class CoepConfiguration {
     private boolean enforcingMode = true;
     private boolean disabled = false;
     private String header = COEP_ENFORCING_HEADER;
+    private String path;
 
     public void addHeader(Map<String, Object> session, HttpServletResponse res){
         if (disabled ){ return; }
@@ -54,7 +51,7 @@ public class CoepConfiguration {
             Map<String, String> params = new HashMap<>();
             params.put("group", reportUri);
             params.put("max_age", "86400");
-            params.put("endpoints", String.format("[{url: '%s'}]", reportUri));
+            params.put("endpoints", String.format("[{url: '%s'}]", getFullReportUri()));
             res.addHeader(REPORT_TO_HEADER, params.toString());
         }
     }
@@ -64,8 +61,18 @@ public class CoepConfiguration {
 //    Cross-Origin-Embedder-Policy: require-corp; report-to="coep_rollout_1"
 
     private String getFullReportUri(){
-        // TODO change to full path
-        return "dummy";
+        int len = path.length();
+        if (reportUri.substring(len).equals(path)){
+            return reportUri;
+        } else if (reportUri.charAt(0) == '/') {
+            return reportUri = path+reportUri;
+        } else {
+            return reportUri;
+        }
+    }
+
+    public void setPath(String value){
+        path = value;
     }
 
     public void setEnforcingMode(boolean mode){

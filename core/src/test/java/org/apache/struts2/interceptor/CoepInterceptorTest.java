@@ -47,7 +47,6 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
 
     public void testExemptedPath() throws Exception{
         interceptor.setExemptedPaths("/foo");
-        request.setContextPath("/foo");
         interceptor.setEnforcingMode("true");
 
         interceptor.intercept(mai);
@@ -57,8 +56,19 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testReportingHeader() throws Exception {
+        interceptor.setEnforcingMode("false");
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(COEP_REPORT_HEADER);
+        assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
+        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
+    }
+
+    public void testRelativePathWithContext() throws Exception {
         request.setContextPath("/foo");
         interceptor.setEnforcingMode("false");
+        String content = String.format("require-corp; report-to='/foo%s'", defaultReportUri);
 
         interceptor.intercept(mai);
 
@@ -76,6 +86,7 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
             assert(true);
         }
     }
+
     public void testCannotParseRelativeUri() throws Exception {
         interceptor.setEnforcingMode("false");
         try{

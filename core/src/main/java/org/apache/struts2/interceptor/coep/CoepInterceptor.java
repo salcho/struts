@@ -55,6 +55,8 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
 
         if (!exemptedPaths.contains(path)){
             Map<String, Object> ses = invocation.getInvocationContext().getSession();
+            config.setPath(req.getContextPath());
+            System.out.println(path);
             config.addHeader(ses, res);
         }
     }
