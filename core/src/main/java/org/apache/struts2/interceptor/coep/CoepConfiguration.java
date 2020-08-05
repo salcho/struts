@@ -25,10 +25,10 @@ import java.util.Map;
 
 public class CoepConfiguration {
 
-    private final String REQUIRE_COEP_HEADER = "require-corp";
-    private final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
-    private final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
-    private final String REPORT_TO_HEADER = "Report-to";
+    private static final String REQUIRE_COEP_HEADER = "require-corp";
+    private static final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
+    private static final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
+    private static final String REPORT_TO_HEADER = "Report-to";
 
     private String reportUri = "/coep-reports"; // TODO find default coep uri
     private boolean enforcingMode = true;
@@ -56,10 +56,7 @@ public class CoepConfiguration {
         }
     }
 
-//    Report-To: { group: 'coep_rollout_1', max_age: 86400,
-//   endpoints: [{ url: 'https://first-party-test.glitch.me/report'}]}
-//    Cross-Origin-Embedder-Policy: require-corp; report-to="coep_rollout_1"
-
+    // TODO need better coding practice than that
     private String getFullReportUri(){
         int len = path.length();
         if (reportUri.substring(len).equals(path)){

@@ -375,7 +375,7 @@
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="coepInterceptor">
                     <param name="enforcingMode">true</param>
-                    <param name="reportUri">/some-uri</param>
+                    <param name="reportUri">/coep-reports</param>
                     <param name="disabled">false</param>
                 </interceptor-ref>
                 <interceptor-ref name="exception"/>
