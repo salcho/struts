@@ -246,6 +246,7 @@
             <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
             <interceptor name="clearSession" class="org.apache.struts2.interceptor.ClearSessionInterceptor" />
+            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.CoopInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
@@ -377,6 +378,9 @@
                     <param name="enforcingMode">true</param>
                     <param name="reportUri">/coep-reports</param>
                     <param name="disabled">false</param>
+                <interceptor-ref name="coopInterceptor">
+                    <param name="exemptedPaths"></param>
+                    <param name="mode"></param>
                 </interceptor-ref>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
