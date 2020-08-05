@@ -378,6 +378,7 @@
                     <param name="enforcingMode">true</param>
                     <param name="reportUri">/coep-reports</param>
                     <param name="disabled">false</param>
+                </interceptor-ref>
                 <interceptor-ref name="coopInterceptor">
                     <param name="exemptedPaths"></param>
                     <param name="mode"></param>
