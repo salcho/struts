@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.interceptor.coep.CoepInterceptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -37,10 +36,9 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-    private final String defaultReportUri = "/coep-reports";
     private final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
     private final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
-    private final String HEADER_CONTENT = String.format("require-corp");
+    private final String HEADER_CONTENT = "require-corp";
 
 
     public void testDisabled() throws Exception {
@@ -81,38 +79,6 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
         assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
         assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
     }
-//
-//    public void testRelativePathWithContextPath() throws Exception {
-//        interceptor.setEnforcingMode("false");
-//        request.setContextPath("/bar");
-//        String content = String.format("require-corp; report-to='/bar%s'", defaultReportUri);
-//
-//        interceptor.intercept(mai);
-//
-//        String header = response.getHeader(COEP_REPORT_HEADER);
-//        assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
-//        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
-//    }
-//
-//    public void testCannotParseUri() throws Exception {
-//        interceptor.setEnforcingMode("false");
-//        try{
-//            interceptor.setReportUri("ww w. google.@com");
-//            assert(false);
-//        } catch (IllegalArgumentException e){
-//            assert(true);
-//        }
-//    }
-//
-//    public void testCannotParseRelativeUri() throws Exception {
-//        interceptor.setEnforcingMode("false");
-//        try{
-//            interceptor.setReportUri("some-uri");
-//            assert(false);
-//        } catch (IllegalArgumentException e){
-//            assert(true);
-//        }
-//    }
 
     @Override
     protected void setUp() throws Exception {
