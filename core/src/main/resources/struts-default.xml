@@ -377,6 +377,7 @@
                 <interceptor-ref name="coepInterceptor">
                     <param name="enforcingMode">true</param>
                     <param name="disabled">false</param>
+                    <param name="exemptedPaths"></param>
                 </interceptor-ref>
                 <interceptor-ref name="coopInterceptor">
                     <param name="exemptedPaths"></param>
