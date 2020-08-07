@@ -374,15 +374,6 @@
                  associated with requests that should not be validated.
                  -->
             <interceptor-stack name="defaultStack">
-                <interceptor-ref name="coepInterceptor">
-                    <param name="enforcingMode">true</param>
-                    <param name="disabled">false</param>
-                    <param name="exemptedPaths"></param>
-                </interceptor-ref>
-                <interceptor-ref name="coopInterceptor">
-                    <param name="exemptedPaths"></param>
-                    <param name="mode">same-origin</param>
-                </interceptor-ref>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
@@ -399,6 +390,15 @@
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="coepInterceptor">
+                    <param name="enforcingMode">true</param>
+                    <param name="disabled">false</param>
+                    <param name="exemptedPaths"></param>
+                </interceptor-ref>
+                <interceptor-ref name="coopInterceptor">
+                    <param name="exemptedPaths"></param>
+                    <param name="mode">same-origin</param>
+                </interceptor-ref>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>

@@ -33,53 +33,16 @@ import java.util.Set;
 
 
 /**
- * <!-- START SNIPPET: description -->
- *
- *
  * Interceptor that implements Cross-Origin Embedder Policy on incoming requests used to protect a
  * document from loading any non-same-origin resources which don't explicitly grant the document
  * permission to be loaded.
  *
+ *
  * @see <a href="https://web.dev/why-coop-coep/#coep">https://web.dev/why-coop-coep/#coep</a>
- * @see <a href="https://web.dev/coop-coep/">https://web.dev/coop-coep/</a>
+ * @see <a href="https://wicg.github.io/cross-origin-embedder-policy/">https://wicg.github.io/cross-origin-embedder-policy/</a>
  *
- * <!-- END SNIPPET: description -->
- *
- * <!-- START SNIPPET: parameters -->
- * <ul>
- *     <li>exemptedPaths - Set of opt out endpoints that are meant to serve
- *              cross-site traffic</li>
- *      <li>enforcingMode - Boolean variable the user can set so that COEP operates in enforcing or
- *              report-only mode (blocking resource and reporting violation or only reporting violation</li>
- *      <li>disabled - Boolean variable the user can set to fully disable COEP</li>
- * </ul>
- *
- * <!-- END SNIPPET: parameters -->
- *
- * <!-- START SNIPPET: extending -->
- *
- *  <ul>
- *      <li>AbstractInterceptor - Fundamental interfce for each interceptor to have access to init(),
- *              destroy() and intercept() methods.</li>
- *      <li>PreResultListener - Allows an interecptor to get access to the reponse object. This way
- *              we canmanipulate the response, for example add headers to the reponse</li>
- *  </ul>
- *
- * <!-- END SNIPPET: extending -->
- *
- * <!-- START SNIPPET: example -->
- *
- * &lt;action ... &gt;
- *   &lt;interceptor-ref name="defaultStack"/&gt;
- *   &lt;interceptor-ref name="coepInterceptor"&gt;
- *      &lt;param name="exemptedPaths"&gt; path1,path2,path3 &lt;para/&gt;
- *      &lt;param name="mode"&gt; true &lt;para/&gt;
- *      &lt;param name="disabled"&gt; false &lt;para/&gt;
- *   &lt;interceptor-ref/&gt;
- *   ...
- * &lt;/action&gt;
- *
- * <!-- END SNIPPET: example -->
+ * @author Santiago Siaz - saldiaz@google.com
+ * @author Giannis Chatziveroglou - giannisc@google.com
  **/
 public class CoepInterceptor extends AbstractInterceptor implements PreResultListener {
 
@@ -112,7 +75,9 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     }
 
     public void addHeader(HttpServletResponse res){
-        if (disabled ){ return; }
+        if (disabled ){
+            return;
+        }
         res.setHeader(header, REQUIRE_COEP_HEADER);
     }
 
