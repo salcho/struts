@@ -391,7 +391,7 @@
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="coepInterceptor">
-                    <param name="enforcingMode">true</param>
+                    <param name="enforcingMode">false</param>
                     <param name="disabled">false</param>
                     <param name="exemptedPaths"></param>
                 </interceptor-ref>

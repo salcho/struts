@@ -40,9 +40,6 @@ import java.util.Set;
  *
  * @see <a href="https://web.dev/why-coop-coep/#coep">https://web.dev/why-coop-coep/#coep</a>
  * @see <a href="https://wicg.github.io/cross-origin-embedder-policy/">https://wicg.github.io/cross-origin-embedder-policy/</a>
- *
- * @author Santiago Siaz - saldiaz@google.com
- * @author Giannis Chatziveroglou - giannisc@google.com
  **/
 public class CoepInterceptor extends AbstractInterceptor implements PreResultListener {
 
@@ -52,7 +49,6 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     private static final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
 
     private final Set<String> exemptedPaths = new HashSet<>();
-    private boolean enforcingMode = true;
     private boolean disabled = false;
     private String header = COEP_ENFORCING_HEADER;
 
@@ -68,17 +64,12 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
         HttpServletResponse res = invocation.getInvocationContext().getServletResponse();
         final String path = req.getContextPath();
 
-        if (!exemptedPaths.contains(path)){
-            Map<String, Object> ses = invocation.getInvocationContext().getSession();
-            addHeader(res);
+        if (exemptedPaths.contains(path)){
+            // no need to add headers
+            LOG.debug(String.format("Skipping COEP header for exempted path %s", path));
+        } else if (!disabled){
+            res.setHeader(header, REQUIRE_COEP_HEADER);
         }
-    }
-
-    public void addHeader(HttpServletResponse res){
-        if (disabled ){
-            return;
-        }
-        res.setHeader(header, REQUIRE_COEP_HEADER);
     }
 
     public void setExemptedPaths(String paths){
@@ -86,7 +77,7 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     }
 
     public void setEnforcingMode(String mode){
-        this.enforcingMode = Boolean.parseBoolean(mode);;
+        boolean enforcingMode = Boolean.parseBoolean(mode);
         if (enforcingMode){
             header = COEP_ENFORCING_HEADER;
         } else {

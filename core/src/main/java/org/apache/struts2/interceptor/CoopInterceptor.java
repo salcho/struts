@@ -39,9 +39,6 @@ import java.util.Set;
  *
  * @see <a href="https://web.dev/why-coop-coep/#coop">https://web.dev/why-coop-coep/#coop</a>
  * @see <a href="https://github.com/whatwg/html/pull/5334/files">https://github.com/whatwg/html/pull/5334/files</a>
- *
- * @author Santiago Siaz - saldiaz@google.com
- * @author Giannis Chatziveroglou - giannisc@google.com
  **/
 public class CoopInterceptor extends AbstractInterceptor implements PreResultListener {
 
