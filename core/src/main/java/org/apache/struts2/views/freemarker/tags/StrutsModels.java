@@ -73,6 +73,7 @@ public class StrutsModels {
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
     protected InputTransferSelectModel inputtransferselect;
+    protected StyleModel style;
 
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -408,6 +409,13 @@ public class StrutsModels {
             inputtransferselect = new InputTransferSelectModel(stack, req, res);
         }
         return inputtransferselect;
+    }
+
+    public StyleModel getStyle() {
+        if (style == null) {
+            style = new StyleModel(stack, req, res);
+        }
+        return style;
     }
 
 }
