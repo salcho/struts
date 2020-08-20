@@ -26,12 +26,12 @@
             href="${parameters.href}"<#rt/>
         </#if>
         <#if parameters.type?has_content>
-            hreflang="${parameters.type}"<#rt/>
+            type="${parameters.type}"<#rt/>
         </#if>
         <#if parameters.media?has_content>
-            rel="${parameters.media}"<#rt/>
+            media="${parameters.media}"<#rt/>
         </#if>
         <#if parameters.title?has_content>
-            rel="${parameters.title}"<#rt/>
+            title="${parameters.title}"<#rt/>
         </#if>
 >

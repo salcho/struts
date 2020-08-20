@@ -33,9 +33,10 @@ public class StyleHandler extends AbstractTagHandler implements TagGenerator {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
 
-        attrs.addIfExists("type", params.get(("type")))
-                .addIfExists("media", params.get("media"))
-                .addIfExists("title", params.get("title"));
+        attrs.add("nonce", (String) params.get("nonce"))
+            .addIfExists("type", params.get(("type")))
+            .addIfExists("media", params.get("media"))
+            .addIfExists("title", params.get("title"));
 
         start("style", attrs);
         end("style");

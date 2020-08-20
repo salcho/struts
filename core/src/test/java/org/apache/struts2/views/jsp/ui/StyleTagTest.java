@@ -38,8 +38,8 @@ public class StyleTagTest extends AbstractUITagTest {
         doStyleTest(tag);
         String s = writer.toString();
 
-        assertTrue("Incorrect src attribute for style tag", s.contains("title=\"bar\""));
-        assertFalse("Non-existent async attribute for style tag", s.contains("media=\"foo\""));
+        assertTrue("Incorrect title attribute for style tag", s.contains("title=\"bar\""));
+        assertTrue("Non-existent media attribute for style tag", s.contains("media=\"foo\""));
         assertTrue("Incorrect type attribute for style tag", s.contains("type=\"module\""));
         assertTrue("Incorrect nonce attribute for style tag", s.contains("nonce=\"" + NONCE_VAL+"\""));
     }
