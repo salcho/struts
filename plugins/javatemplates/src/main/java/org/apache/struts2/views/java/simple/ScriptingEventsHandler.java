@@ -34,7 +34,6 @@ public class ScriptingEventsHandler extends AbstractTagHandler {
     @Override
     public void start(String name, Attributes a) throws IOException {
         Map params = context.getParameters();
-        a.add("nonce", "r4nd0m");
         a.addIfExists("onclick", params.get("onclick"));
         a.addIfExists("ondblclick", params.get("ondblclick"));
         a.addIfExists("onmousedown", params.get("onmousedown"));
