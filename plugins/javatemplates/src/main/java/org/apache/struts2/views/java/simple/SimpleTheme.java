@@ -52,7 +52,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("checkboxlist", new FactoryList(CheckboxListHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("script", new FactoryList(ScriptHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("script-close", new FactoryList(ScriptHandler.CloseHandler.class));
-                put("style", new FactoryList(StyleHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("style", new FactoryList(StyleHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class, NonceHandler.class));
                 put("style-close", new FactoryList(StyleHandler.CloseHandler.class));
                 put("link", new FactoryList(LinkHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("actionerror", new FactoryList(ActionErrorHandler.class));

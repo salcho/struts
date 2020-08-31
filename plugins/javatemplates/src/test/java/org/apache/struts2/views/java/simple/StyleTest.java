@@ -38,7 +38,6 @@ public class StyleTest extends AbstractTest {
         tag.setMedia("foo");
         tag.setTitle("bar");
 
-
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);

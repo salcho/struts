@@ -43,7 +43,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  *
- * &lt;s:style ... /&gt;
+ * JSP
+ *      &lt;s:style ... /&gt;
+ *
+ * Freemarker
+ *      &lt;@s.style .../&gt;
  *
  * </pre>
  *

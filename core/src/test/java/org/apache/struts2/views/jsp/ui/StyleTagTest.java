@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import javax.servlet.jsp.JspException;
@@ -29,8 +28,7 @@ public class StyleTagTest extends AbstractUITagTest {
 
     public void testStyleTagAttributes() {
         StyleTag tag = new StyleTag();
-
-
+        
         tag.setType("module");
         tag.setMedia("foo");
         tag.setTitle("bar");
