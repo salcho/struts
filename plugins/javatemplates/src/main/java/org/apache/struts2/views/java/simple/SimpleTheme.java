@@ -60,7 +60,6 @@ public class SimpleTheme extends DefaultTheme {
                 put("hidden", new FactoryList(HiddenHandler.class));
                 put("fielderror", new FactoryList(FieldErrorHandler.class));
                 put("empty", new FactoryList(EmptyHandler.class));
-//                put("doubleselect", new FactoryList(NonceHandler.class));
            }
         });
         setName("simple");
