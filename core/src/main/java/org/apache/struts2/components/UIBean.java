@@ -885,7 +885,7 @@ public abstract class UIBean extends Component {
         Map<String, Object> session = stack.getActionContext().getSession();
         if (session != null) {
             if (session.containsKey("nonce")) {
-                String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
+                String nonceValue = session.get("nonce").toString();
                 addParameter("nonce", nonceValue);
             }
         }
