@@ -36,7 +36,9 @@
 -->
 </script>
 
-<style type="text/css">
+<style type="text/css" <#rt/>
+        <#include "/${parameters.templateDir}/simple/nonce.ftl" />
+>
 <!--
     table.debugTable {border-collapse:collapse; border-spacing:0; background-color:#DDDDDD;}
     table.debugTable th, table.debugTable td {padding:2px;}
