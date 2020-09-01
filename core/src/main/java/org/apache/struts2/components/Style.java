@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  *
  * <p>
- *     TODO fix docs
  * The style tag allows users to either load external resources or inline style sheets. 
  * Several exfiltration techniques exist that leverage CSS injection to steal secret or sensitive information from documents. For this reason, it is recommended to protect against CSS injections with nonce-based CSP. 
  * This s:style tag includes a nonce attribute that is randomly generated with each request. Only style blocks with a valid nonce will be executed if CSP is in use.
